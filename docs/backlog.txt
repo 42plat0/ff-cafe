@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+CURRENT:
+    #--> [feat] get c stack library
+
+___________________________________________________________________________
+DONE:
+    ++++ [fix] Lorem ipsum idle bulla. 
+
+---------------------------------------------------------------------------
+
+[feat] get c queue library
+[feat] create config file for initial data
+
+[fix] fix system
+
+[chore] create PSP and other docs
+
+___________________________________________________________________________
+other tags
+[refactor, test]
