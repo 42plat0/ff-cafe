@@ -1,14 +1,13 @@
 ---------------------------------------------------------------------------
 CURRENT:
-    !#--> [feat] get c queue library
+    #--> [feat] create config file for initial data
 ___________________________________________________________________________
 DONE:
     ++++ [feat] get c stack library
+    ++++ [feat] get c queue library
     ++++ [chore] create PSP
 
 ---------------------------------------------------------------------------
-
-[feat] create config file for initial data
 
 [chore] create other docs (checking code, etc...)
 

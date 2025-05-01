@@ -1,8 +1,8 @@
 CC = gcc
 CFLAGS = -I. 
-DEPS= stack.h # queue.h
-OBJ = main.o include/stack.o
-LIBS= stack
+DEPS= stack.h queue.h
+OBJ = main.o include/stack.o include/queue.o
+LIBS= stack queue
 NAME=main
 
 run: $(NAME)
