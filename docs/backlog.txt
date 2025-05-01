@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+CURRENT:
+    !#--> [feat] get c queue library
+___________________________________________________________________________
+DONE:
+    ++++ [feat] get c stack library
+    ++++ [chore] create PSP
+
+---------------------------------------------------------------------------
+
+[feat] create config file for initial data
+
+[chore] create other docs (checking code, etc...)
+
+[refactor] store object files in build/ 
+___________________________________________________________________________
+other tags
+[refactor, test]
