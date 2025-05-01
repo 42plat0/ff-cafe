@@ -5,6 +5,32 @@
 
 // Example usage
 int main() {
+    use_queue();
+
+    return 0;
+}
+
+ void use_queue(){
+     Queue* queue = queue_init(); 
+
+    if (queue==NULL){
+        return;
+    }
+     int* data = malloc(sizeof(int));
+
+    if(data == NULL){
+        return ;
+    }
+    *data = 3;
+    queue_enqueue(queue, data);
+
+     printf("Top element: %d\n", *((int*) queue_peek(queue)));
+     printf("Queue size: %d\n", queue_size(queue));
+ 
+
+ }
+
+void use_stack(){
     // Create a stack with initial capacity of 5
     Stack* stack = createStack(5);
     
