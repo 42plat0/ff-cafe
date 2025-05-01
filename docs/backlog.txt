@@ -1,17 +1,37 @@
 ---------------------------------------------------------------------------
 CURRENT:
-    #--> [feat] create config file for initial data
+
 ___________________________________________________________________________
 DONE:
     ++++ [feat] get c stack library
     ++++ [feat] get c queue library
     ++++ [chore] create PSP
+    ++++ [feat] create config file for initial data
 
 ---------------------------------------------------------------------------
 
+---FIX
+[fix] update data handling in queue
+
+---FEAT
+[feat] apsirasyti programos struktura (objektai)
+[feat] sumustiniu laikytuvas struct - naudojasi config vars
+[feat] laiko apskaiciavimo ir darbo dienos veikimo funkcija, util
+[feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (new,stack)
+[feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (old,queue)
+[feat] proceso funkcija: sumustinio padejimas (nauji sumustiniai) 
+[feat] proceso funkcija: sumustinis struct
+[feat] proceso funkcija: nuostoliu ir pelno skaiciavimas 
+[feat] parduotuves struct 
+    // sumustiniu laikytuvai, sumustinio paemimo principas (old, new), nuostolis, pelnas
+[feat] palyginti dvi parduotuves main
+
+---CHORE 
 [chore] create other docs (checking code, etc...)
 
+---REFACTOR
 [refactor] store object files in build/ 
+
 ___________________________________________________________________________
 other tags
-[refactor, test]
+[test]

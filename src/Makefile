@@ -1,18 +1,22 @@
 CC = gcc
 CFLAGS = -I. 
-DEPS= stack.h queue.h
-OBJ = main.o include/stack.o include/queue.o
-LIBS= stack queue
 NAME=main
+
+DEPS_DIR = include/
+DEPS= stack queue config
+
+DEPS_H = $(addsufix .h, $(DEPS))
+DEPS_IN_DIR = $(addprefix $(DEPS_DIR), $(DEPS))
+OBJ = $(addsuffix .o, $(NAME) $(DEPS_IN_DIR))
 
 run: $(NAME)
 	./$(NAME)
 
-%.o: %.c $(DEPS)
+%.o: %.c $(DEPS_H)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(NAME): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 clean: 
-	rm -rf include/*.o *.o $(NAME)
+	rm -rf $(DEPS_O) $(NAME)

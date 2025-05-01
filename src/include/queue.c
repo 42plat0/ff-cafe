@@ -6,10 +6,6 @@
  */
 Queue* queue_init() {
     Queue* queue = (Queue*)malloc(sizeof(Queue));
-    if (queue_is_empty(queue)) {
-        return NULL;
-    }
-
     queue->front = NULL;
     queue->rear = NULL;
     queue->size = 0;

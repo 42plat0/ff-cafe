@@ -1,4 +1,7 @@
 #include "include/stack.h"
+#include "include/queue.h"
+#include "include/config.h"
+
 
 // Example usage
 int main() {
