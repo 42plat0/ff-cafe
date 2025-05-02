@@ -11,6 +11,6 @@ Pradiniai duomenys:
     - tikimybė, kad bet kuriuo laiko momentu klientas užsinorės sumuštinio, 
     - iš virtuvės vienu kartu pateikiamų sumuštinių kiekis ir periodiškumas, kiek laiko išgulėjęs sumuštinis vakare išmetamas, 
     - vieno sumuštinio kaina, 
-    - darbo dienos ilgis. 
+    - darbo dienos ilgis.  
 
 Įvertinti, kaip sumažėtų kavinės nuostoliai, jei vietoje esamų laikytuvų ji įsigytų 1 arba 2 naujus laikytuvus, iš kurių klientas tur imti seniausią sumuštinį.

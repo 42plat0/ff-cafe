@@ -28,6 +28,7 @@ bool isFull(Stack* stack) {
     return stack->top == stack->capacity - 1;
 }
 
+// TODO update input datatype
 // Push an element onto the stack
 void push(Stack* stack, DT item) {
     // TODO needs to go to its own functionk
