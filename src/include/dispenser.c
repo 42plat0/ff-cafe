@@ -1,5 +1,7 @@
 #include "dispenser.h"
 
+const SANDWICH_MAX_TOTAL=30;
+
 Dispenser* dispenser_init(){
     Dispenser* dispenser = (Dispenser*)malloc(sizeof(Dispenser));
 
@@ -8,7 +10,7 @@ Dispenser* dispenser_init(){
         return NULL;
     }
 
-    dispenser->item_rack = stack_init(20);
+    dispenser->item_rack = stack_create();
 
     if (!dispenser->item_rack){
         perror("Item rack for dispenser couldn't be created");
@@ -19,7 +21,11 @@ Dispenser* dispenser_init(){
 }
 
 void dispenser_add_sandwich(Dispenser* sandwich_dispenser, Sandwich* sandwich){
-    if (sandwich_dispenser == NULL || sandwich == NULL || sandwich_dispenser->item_rack == NULL){
+    if (
+        sandwich_dispenser == NULL || 
+        sandwich == NULL || 
+        sandwich_dispenser->item_rack == NULL
+    ){
         perror("Dispenser/sandwich/stack is null");
         return;
     }
@@ -33,7 +39,7 @@ int dispenser_get_sandwich_count(Dispenser* sandwich_dispenser){
         return NULL;
     }
 
-    return stack_get_size(sandwich_dispenser->item_rack);
+    return stack_size(sandwich_dispenser->item_rack);
 }
 
 int dispenser_load_sandwiches(Dispenser* sandwich_dispenser, int count, float s_price, int s_expires_in){
@@ -41,10 +47,10 @@ int dispenser_load_sandwiches(Dispenser* sandwich_dispenser, int count, float s_
         perror("Dispenser/stack is null");
         return -1;
     }
-
+    
     while(
-        !stack_is_full(sandwich_dispenser->item_rack) 
-        && count-- > 0
+        count-- > 0 && 
+        stack_size(sandwich_dispenser->item_rack) < SANDWICH_MAX_TOTAL // Manually limit stack size
     ){
         dispenser_add_sandwich(
             sandwich_dispenser, 

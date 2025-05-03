@@ -1,3 +1,6 @@
+#ifndef DISPENSER_H
+#define DISPENSER_H
+
 #include "sandwich.h"
 #include "stack.h"
 
@@ -50,3 +53,5 @@ int dispenser_unload_sandwiches(Dispenser* sandwich_dispenser);
 /** TODO
  * @brief  Remove sandwich ?????
 */
+
+#endif

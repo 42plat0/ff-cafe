@@ -1,3 +1,6 @@
+#ifndef SANDWICH_H
+#define SANDWICH_H
+
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -27,7 +30,9 @@ bool is_expired(Sandwich* sandwich);
  * @param decrement by
  */
 
-/**
+/** TODO
  * @brief Unload Sandwich from memory
  */
-bool destroy_sandwich(Sandwich* s);
+void destroy_sandwich(Sandwich* s);
+
+#endif
