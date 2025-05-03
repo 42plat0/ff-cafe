@@ -1,84 +1,124 @@
 #include "stack.h"
+#include <stdlib.h>
 
-// Initialize a new stack with given capacity
-Stack* createStack(int capacity) {
+/**
+ * Initialize a new empty stack
+ */
+Stack* stack_create(void) {
     Stack* stack = (Stack*)malloc(sizeof(Stack));
-    if (!stack)
-        return NULL;
-    
-    stack->capacity = capacity;
-    stack->top = -1;  // Stack is initially empty
-    stack->array = (DT*)malloc(stack->capacity * sizeof(DT));
-    
-    if (!stack->array) {
-        free(stack);
-        return NULL;
+    if (stack == NULL) {
+        return NULL;  // Memory allocation failed
     }
     
+    stack->top = NULL;
+    stack->size = 0;
     return stack;
 }
 
-// Check if stack is empty
-bool isEmpty(Stack* stack) {
-    return stack->top == -1;
+/**
+ * Check if the stack is empty
+ */
+bool stack_is_empty(const Stack* stack) {
+    if (stack == NULL) {
+        return true;  // NULL stack is considered empty
+    }
+    return stack->top == NULL;
 }
 
-// Check if stack is full
-bool isFull(Stack* stack) {
-    return stack->top == stack->capacity - 1;
+/**
+ * Get the current size of the stack
+ */
+int stack_size(const Stack* stack) {
+    if (stack == NULL) {
+        return 0;  // NULL stack has size 0
+    }
+    return stack->size;
 }
 
-// TODO update input datatype
-// Push an element onto the stack
-void push(Stack* stack, DT item) {
-    // TODO needs to go to its own functionk
+/**
+ * Push an element onto the stack
+ */
+bool stack_push(Stack* stack, void* data) {
+    if (stack == NULL) {
+        return false;  // Invalid stack
+    }
+    
+    StackNode* new_node = (StackNode*)malloc(sizeof(StackNode));
+    if (new_node == NULL) {
+        return false;  // Memory allocation failed
+    }
+    
+    new_node->data = data;
+    new_node->next = stack->top;
+    stack->top = new_node;
+    stack->size++;
+    
+    return true;
+}
 
-    if (isFull(stack)) {
-        // Resize the stack by doubling its capacity
-        int newCapacity = stack->capacity * 2;
-        int* newArray = (DT*)realloc(stack->array, newCapacity * sizeof(DT));
+/**
+ * Pop an element from the stack
+ */
+void* stack_pop(Stack* stack) {
+    if (stack == NULL || stack->top == NULL) {
+        return NULL;  // Stack is empty or invalid
+    }
+    
+    StackNode* top_node = stack->top;
+    void* data = top_node->data;
+    
+    stack->top = top_node->next;
+    stack->size--;
+    
+    free(top_node);  // Free the node (but not the data)
+    return data;
+}
+
+/**
+ * Peek at the top element without removing it
+ */
+void* stack_peek(const Stack* stack) {
+    if (stack == NULL || stack->top == NULL) {
+        return NULL;  // Stack is empty or invalid
+    }
+    
+    return stack->top->data;
+}
+
+/**
+ * Clear all elements from the stack
+ */
+void stack_clear(Stack* stack, void (*free_data)(void*)) {
+    if (stack == NULL) {
+        return;  // Invalid stack
+    }
+    
+    StackNode* current = stack->top;
+    StackNode* next;
+    
+    while (current != NULL) {
+        next = current->next;
         
-        if (!newArray) {
-            printf("Stack overflow. Cannot allocate more memory.\n");
-            return;
+        if (free_data != NULL) {
+            free_data(current->data);  // Free the data using the provided function
         }
         
-        stack->array = newArray;
-        stack->capacity = newCapacity;
+        free(current);  // Free the node
+        current = next;
     }
     
-    stack->array[++stack->top] = item;
+    stack->top = NULL;
+    stack->size = 0;
 }
 
-// Pop an element from the stack
-int pop(Stack* stack) {
-    if (isEmpty(stack)) {
-        printf("Stack underflow. Cannot pop from an empty stack.\n");
-        return -1;  // Return a sentinel value indicating error
+/**
+ * Destroy the stack and free all allocated memory
+ */
+void stack_destroy(Stack* stack, void (*free_data)(void*)) {
+    if (stack == NULL) {
+        return;  // Invalid stack
     }
     
-    return stack->array[stack->top--];
-}
-
-// Return the top element without removing it
-int peek(Stack* stack) {
-    if (isEmpty(stack)) {
-        printf("Stack is empty. Cannot peek.\n");
-        return -1;  // Return a sentinel value indicating error
-    }
-    
-    return stack->array[stack->top];
-}
-
-// Get current size of the stack
-int size(Stack* stack) {
-    return stack->top + 1;
-}
-
-// Free memory allocated for the stack
-void destroyStack(Stack* stack) {
-    if (stack) {
-        free(stack->array);
-        free(stack);
-    }
+    stack_clear(stack, free_data);  // Clear all nodes and optionally free data
+    free(stack);  // Free the stack itself
 }
