@@ -7,16 +7,16 @@ typedef struct Sandwich{
 } Sandwich;
 
 /**
- * @brief Get pointer to Sandwich struct
- * @param price floating point
- * @param expiration time in seconds
- * @return pointer to Sandwich or null
+ * @brief get pointer to sandwich struct
+ * @param int price of sandwich
+ * @param float expiration time in seconds
+ * @return pointer to sandwich or null if failed
  */
 Sandwich* init_sandwich(float sandwich_price, int sandwich_exp_in);
 
 /**
  * @brief Check if sandwich expired
- * @param ptr to sandwich
+ * @param Ptr to sandwich
  * @return true if expired, false otherwise
  */
 bool is_expired(Sandwich* sandwich);
@@ -26,3 +26,8 @@ bool is_expired(Sandwich* sandwich);
  * @param ptr to sandwich
  * @param decrement by
  */
+
+/**
+ * @brief Unload Sandwich from memory
+ */
+bool destroy_sandwich(Sandwich* s);

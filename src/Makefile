@@ -19,4 +19,4 @@ $(NAME): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 clean: 
-	rm -rf $(DEPS_O) $(NAME)
+	rm -rf $(OBJ) $(NAME)

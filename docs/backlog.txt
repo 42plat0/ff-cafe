@@ -1,6 +1,5 @@
 ---------------------------------------------------------------------------
 CURRENT:
-    #--> [feat] apsirasyti programos struktura (objektai)
     !#--> [feat] struct: laikytuvas struct - naudojasi config vars
 ___________________________________________________________________________
 DONE:
@@ -9,6 +8,7 @@ DONE:
     ++++ [chore] create PSP
     ++++ [feat] create config file for initial data
     ++++ [feat] struct: sumustinis struct
+    ++++ [feat] apsirasyti programos struktura (objektai)
 
 ---------------------------------------------------------------------------
 
@@ -16,6 +16,7 @@ DONE:
 [fix] update data handling in queue
 [fix] rename methods and variables in stack, sandwich, dispenser files. need smarter naming conv
 [fix] replace checks for null ptr with assert.h
+[fix] add queue usage to dispenser loading/unloading/adding/size usage
 
 ---FEAT
 [feat] laiko apskaiciavimo ir darbo dienos veikimo funkcija, util
@@ -23,6 +24,7 @@ DONE:
 [feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (old,queue)
 [feat] proceso funkcija: sumustinio padejimas (nauji sumustiniai) 
 [feat] proceso funkcija: nuostoliu ir pelno skaiciavimas 
+[feat] update stack lib
 
 [feat] struct: parduotuve struct 
     // sumustiniu laikytuvai, sumustinio paemimo principas (old, new), nuostolis, pelnas

@@ -6,6 +6,12 @@ typedef struct Dispenser{
 } Dispenser;
 
 /**
+ * @brief Get pointer to Dispenser struct with Stach initialized
+ * @return pointer to Dispenser or null if failed
+ */
+Dispenser* dispenser_init();
+
+/**
  * @brief  Add sandwich to rack
  * @param  Pointer to Dispenser struct
  * @param  Pointer to Sandwich struct
@@ -18,6 +24,21 @@ void dispenser_add_sandwich(Dispenser* sandwich_dispenser, Sandwich* sandwich);
  * @return Count of elements in Dispenser or NULL if bug
  */
 int dispenser_get_sandwich_count(Dispenser* sandwich_dispenser);
+
+/** TODO
+ * @brief  Load sandwiches 
+ * @param  Pointer to Dispenser struct
+ * @param  int count of sandwiches
+ * @param  float sandwich price
+ * @param  int sandwich expiration time in seconds
+ * @return int number of sandwiches added, -1 if bug
+*/
+int dispenser_load_sandwiches(
+    Dispenser* sandwich_dispenser, 
+    int count, 
+    float s_price, 
+    int s_expires_in
+);
 
 /** TODO
  * @brief  Unload sandwiches if there are any that are expired
