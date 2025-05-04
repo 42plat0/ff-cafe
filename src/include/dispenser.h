@@ -58,7 +58,9 @@ int dispenser_load_sandwiches(
 
 /** TODO
  * @brief  Unload sandwiches if there are any that are expired
+ * 
  * @param  Pointer to Dispenser struct
+ * 
  * @return Returns number of items unloaded
 */
 int dispenser_unload_sandwiches(Dispenser* sandwich_dispenser);

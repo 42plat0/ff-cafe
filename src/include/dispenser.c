@@ -1,6 +1,6 @@
 #include "dispenser.h"
 
-const int SANDWICH_MAX_TOTAL=30;
+const int SANDWICH_MAX_TOTAL=100;
 
 Dispenser* dispenser_init(){
     Dispenser* dispenser = (Dispenser*)malloc(sizeof(Dispenser));
@@ -39,9 +39,10 @@ void dispenser_remove_item(Dispenser* sandwich_dispenser){
         return;
     }
 
-    // Maybe use somewhere
-    void* item = stack_pop(sandwich_dispenser->item_rack);
-
+    // TODO perkelti i atskira f()
+    Sandwich* item = (Sandwich *) stack_pop(sandwich_dispenser->item_rack);
+    // Do smth
+    sandwich_destroy(item);
 }
 
 int dispenser_get_sandwich_count(Dispenser* sandwich_dispenser){
@@ -65,7 +66,7 @@ int dispenser_load_sandwiches(Dispenser* sandwich_dispenser, int count, float s_
     ){
         dispenser_add_item(
             sandwich_dispenser, 
-            init_sandwich(s_price, s_expires_in)
+            sandwich_init(s_price, s_expires_in)
         );
     }
 
@@ -74,5 +75,22 @@ int dispenser_load_sandwiches(Dispenser* sandwich_dispenser, int count, float s_
 }
 
 int dispenser_unload_sandwiches(Dispenser* sandwich_dispenser){
+    if (sandwich_dispenser == NULL  || sandwich_dispenser->item_rack == NULL){
+        perror("Dispenser/stack is null");
+        return -1;
+    }
+    int count = stack_size(sandwich_dispenser->item_rack);
+    
+    stack_clear(sandwich_dispenser->item_rack, free);
 
+    return count;
+}
+
+void dispenser_destroy(Dispenser* sandwich_dispenser){
+    if (sandwich_dispenser == NULL){
+        perror("Dispenser/stack is null");
+        return;
+    }
+
+    free(sandwich_dispenser);
 }
