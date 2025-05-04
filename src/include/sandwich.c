@@ -1,7 +1,7 @@
 #include "sandwich.h"
 
 // Gets you a sandwich
-Sandwich* init_sandwich(float sandwich_price, int sandwich_exp_in){
+Sandwich* sandwich_init(float sandwich_price, int sandwich_exp_in){
     Sandwich* new_sandwich = (Sandwich*) malloc(sizeof(Sandwich));         
     
     if (new_sandwich == NULL){
@@ -16,7 +16,7 @@ Sandwich* init_sandwich(float sandwich_price, int sandwich_exp_in){
 }
 
 // Tells if sandwich is no good to eat
-bool is_expired(Sandwich* sandwich){
+bool sandwich_is_expired(Sandwich* sandwich){
     if (sandwich == NULL){
         perror("Sandwich struct is null");
         return NULL;
@@ -25,8 +25,17 @@ bool is_expired(Sandwich* sandwich){
     return sandwich->expires_in > 0;
 }
 
+void sandwich_decrement_expiration_time(Sandwich* sandwich){
+    if (sandwich == NULL){
+        perror("Sandwich struct is null");
+        return;
+    }
+
+    sandwich->expires_in -= 1; // Second
+}
+
 // You eat sandwich
-void destroy_sandwich(Sandwich* s){
-    if (s == NULL) return;
-    free(s);
+void sandwich_destroy(Sandwich* sandwich){
+    if (sandwich == NULL) return;
+    free(sandwich);
 }
