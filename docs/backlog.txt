@@ -1,6 +1,11 @@
 ---------------------------------------------------------------------------
 CURRENT:
-    #--> [fix] add queue usage to dispenser loading/unloading/adding/size usage
+    # --> [fix] add queue usage to dispenser loading/unloading/adding/size usage
+
+    !#--> [feat] laiko apskaiciavimo ir darbo dienos veikimo funkcija, main 
+    // Susije su sumustinio "senejimu". 
+
+    #--> [feat] add when was sandwich made to its struct, that way we dont need to detract from it each time, update is_expired function then. When picked (sandwich), we check if its expired, if yes its thrown away and calculated loss for cafe, other way - profit. Either way, its removed
 
 ___________________________________________________________________________
 DONE:
@@ -21,8 +26,6 @@ DONE:
 [fix] replace checks for null ptr with assert.h
 
 ---FEAT
-[feat] laiko apskaiciavimo ir darbo dienos veikimo funkcija, main 
-    // Susije su sumustinio "senejimu". 
 [feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (new,stack)
 [feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (old,queue)
 [feat] proceso funkcija: sumustinio padejimas (nauji sumustiniai) 
