@@ -6,6 +6,7 @@ CURRENT:
     // Susije su sumustinio "senejimu". 
 
     #--> [feat] add when was sandwich made to its struct, that way we dont need to detract from it each time, update is_expired function then. When picked (sandwich), we check if its expired, if yes its thrown away and calculated loss for cafe, other way - profit. Either way, its removed
+        // Lyg ir done
 
 ___________________________________________________________________________
 DONE:
@@ -19,6 +20,10 @@ DONE:
     ++++ [feat] struct: laikytuvas struct - naudojasi config vars
 
 ---------------------------------------------------------------------------
+---TODO
+Atrinkti dispenseri, kuris maziau sumustiniu turi
+Atrinkimas sumustiniu ir atidavimas to, kuris galioja
+...
 
 ---FIX
 [fix] update data handling in queue

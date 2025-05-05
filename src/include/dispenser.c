@@ -1,8 +1,8 @@
 #include "dispenser.h"
 
-const int SANDWICH_MAX_TOTAL=100;
+const int SANDWICH_MAX_TOTAL= 9999;
 
-Dispenser* dispenser_init(){
+Dispenser* dispenser_init(int isQueue){
     Dispenser* dispenser = (Dispenser*)malloc(sizeof(Dispenser));
 
     if (!dispenser){
@@ -10,7 +10,13 @@ Dispenser* dispenser_init(){
         return NULL;
     }
 
-    dispenser->item_rack = stack_create();
+    if (!isQueue){
+        dispenser->item_rack = stack_create();
+    }else{
+        // TODO queue
+    }
+
+    dispenser->items_in_total = 0;
 
     if (!dispenser->item_rack){
         perror("Item rack for dispenser couldn't be created");
@@ -31,18 +37,16 @@ void dispenser_add_item(Dispenser* sandwich_dispenser, Sandwich* sandwich){
     }
     
     stack_push(sandwich_dispenser->item_rack, sandwich); 
+    sandwich_dispenser->items_in_total++;
 }
 
-void dispenser_remove_item(Dispenser* sandwich_dispenser){
+void* dispenser_remove_item(Dispenser* sandwich_dispenser){
     if (sandwich_dispenser == NULL){
         perror("Dispenser is null, cant remove item");
-        return;
+        return NULL;
     }
 
-    // TODO perkelti i atskira f()
-    Sandwich* item = (Sandwich *) stack_pop(sandwich_dispenser->item_rack);
-    // Do smth
-    sandwich_destroy(item);
+    return stack_pop(sandwich_dispenser->item_rack);
 }
 
 int dispenser_get_sandwich_count(Dispenser* sandwich_dispenser){
@@ -54,7 +58,7 @@ int dispenser_get_sandwich_count(Dispenser* sandwich_dispenser){
     return stack_size(sandwich_dispenser->item_rack);
 }
 
-int dispenser_load_sandwiches(Dispenser* sandwich_dispenser, int count, float s_price, int s_expires_in){
+int dispenser_load_sandwiches(Dispenser* sandwich_dispenser, int count, float s_price, int s_expires_in, int s_made){
     if (sandwich_dispenser == NULL  || sandwich_dispenser->item_rack == NULL){
         perror("Dispenser/stack is null");
         return -1;
@@ -66,7 +70,7 @@ int dispenser_load_sandwiches(Dispenser* sandwich_dispenser, int count, float s_
     ){
         dispenser_add_item(
             sandwich_dispenser, 
-            sandwich_init(s_price, s_expires_in)
+            sandwich_init(s_price, s_expires_in, s_made)
         );
     }
 

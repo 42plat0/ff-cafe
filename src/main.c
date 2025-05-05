@@ -9,37 +9,114 @@
 #include "include/sandwich.h"
 #include "include/dispenser.h"
 
+const double sandwich_taken_probability = SANDWICH_EAT_PER_S_PROBABILITY;
+const int sandwich_fresh_len = SANDWICH_FRESH_LENGTH;
+const int sandwich_prod_time = SANDWICH_PROD_TIME; 
+const int sandwich_prod_count = SANDWICH_PROD_COUNT;
+const float sandwich_price = SANDWICH_PRICE;
+
 void use_dispenser();
 void store_func();
+
+// STORE/DISPENSER.C
 bool is_sandwich_taken(double p);
+bool is_sandwich_load_time(int curr_time, int sandwich_prod_time);
 
 // Example usage
 int main() {
-
-
     srand(time(NULL));
-    double sandwich_taken_probability = SANDWICH_EAT_PER_S_PROBABILITY;
-    int sandwiches_taken = 0;
-    Sandwich* s = sandwich_init(SANDWICH_PRICE, SANDWICH_FRESH_LENGTH);
-    printf("Sandwich exp time left %d\n",s->expires_in);
 
-    for (int i = 0; i <  WORKDAY_LENGTH; i++){
-        sandwich_decrement_expiration_time(s);
+    int total_s_made = 0;
+    int sandwiches_taken = 0;
+    int expired_s = 0;
+
+    Dispenser* dispenser_1 = dispenser_init(0);
+    int time_seconds;
+    for (time_seconds = 0; time_seconds < WORKDAY_LENGTH; time_seconds++){
         if (is_sandwich_taken(sandwich_taken_probability)){
-            // printf("Taken\n");
-            sandwiches_taken++;
-            
+            Sandwich* taken_sandwich = (Sandwich*) dispenser_remove_item(dispenser_1);
+
+            // While there are sandwiches and next one is expired
+            // Take sandwiches and either sell or throwaway
+            while(dispenser_get_sandwich_count(dispenser_1) > 0 && sandwich_is_expired(taken_sandwich, time_seconds)){
+                expired_s++;
+                printf("\t\r%d total sandwiches\n", dispenser_get_sandwich_count(dispenser_1));
+                printf("taken sandwich is expired, loss: %f\n", taken_sandwich->price);
+                taken_sandwich = (Sandwich*) dispenser_remove_item(dispenser_1);
+            }
+            if (taken_sandwich){
+                sandwiches_taken++;
+                printf("taken sandwich is good, profit: %f\n", taken_sandwich->price);
+            }
+            else{
+                printf("No sandwiches left: %d\n", dispenser_get_sandwich_count(dispenser_1));
+            }
+        }
+
+        if (is_sandwich_load_time(time_seconds, sandwich_prod_time)){
+            dispenser_load_sandwiches(
+                dispenser_1, 
+                sandwich_prod_count, 
+                sandwich_price, 
+                sandwich_fresh_len, 
+                time_seconds
+            );
+            printf("Sandiwch count now: %d \n", dispenser_get_sandwich_count(dispenser_1));
+            printf("Sandiwch count now %d\n", dispenser_1->items_in_total);
+            total_s_made += sandwich_prod_count;
+        }
+    }
+    // END OF WORKDAY
+    printf("Sandwiches made: %d\n", total_s_made);
+    printf("Sandwiches taken in %d time is: %d\n", WORKDAY_LENGTH, sandwiches_taken);
+    printf("Sandwiches taken in %d time that were expired is: %d\n", WORKDAY_LENGTH, expired_s);
+    printf("Sandwiches left %d\n", dispenser_get_sandwich_count(dispenser_1));
+    
+    if (!dispenser_get_sandwich_count(dispenser_1)){
+        return 0;
+    }
+    // Calculates leftovers
+    Sandwich* taken_sandwich = (Sandwich*) dispenser_remove_item(dispenser_1);
+
+    int left_exp = 0;
+    int left_good = 0;
+        if (sandwich_is_expired(taken_sandwich, time_seconds)){
+            left_exp++;
         }
         else{
-            // printf("Not taken\n");
+            left_good++;
         }
-
+    // While there are sandwiches, check how many expired and not
+    while(dispenser_get_sandwich_count(dispenser_1) > 0){
+        if (sandwich_is_expired(taken_sandwich, time_seconds)){
+            left_exp++;
+        }
+        else{
+            left_good++;
+        }
+        taken_sandwich = (Sandwich*) dispenser_remove_item(dispenser_1);
     }
-    printf("Sandwiches taken in %d time is:  %d\n", WORKDAY_LENGTH, sandwiches_taken);
-    printf("Sandwich exp time left %d\n",s->expires_in);
+    printf("Sandwiches left good:  %d\n", left_good);
+    printf("Sandwiches left exp:  %d\n", left_exp);
     return 0;
 }
 
+// STORE.C
+void store_func(){
+    Dispenser* dispenser_1 = dispenser_init(0);
+    Dispenser* dispenser_2 = dispenser_init(0);
+
+
+}
+
+bool is_sandwich_load_time(int curr_time, int sandwich_prod_time){
+    if (curr_time == 0 && sandwich_prod_time){
+        return true;
+    }
+    return curr_time % sandwich_prod_time == 0 && curr_time >= sandwich_prod_time;
+
+}
+// STORE.C
 bool is_sandwich_taken(double p){
     if (p == 1){
         return true;
@@ -51,14 +128,8 @@ bool is_sandwich_taken(double p){
     return random < p;
 }
 
-void store_func(){
-    Dispenser* dispenser_1 = dispenser_init();
-    Dispenser* dispenser_2 = dispenser_init();
-
-}
-
 void use_dispenser(){
-    Dispenser* dispenser = dispenser_init();
+    Dispenser* dispenser = dispenser_init(0);
 
     int count = dispenser_get_sandwich_count(dispenser);
     printf("Count: %d\n", count);
@@ -67,7 +138,8 @@ void use_dispenser(){
          dispenser, 
          SANDWICH_PROD_COUNT,
          SANDWICH_PRICE,
-         SANDWICH_FRESH_LENGTH
+         SANDWICH_FRESH_LENGTH,
+        0
      );
     
      count = dispenser_get_sandwich_count(dispenser);
@@ -78,7 +150,7 @@ void use_dispenser(){
      count = dispenser_get_sandwich_count(dispenser);
      printf("Count: %d\n", count);
 
-     dispenser_add_item(dispenser, sandwich_init(3, 300));
+     dispenser_add_item(dispenser, sandwich_init(3, 300, 0));
 
      count = dispenser_get_sandwich_count(dispenser);
      printf("Count: %d\n", count);

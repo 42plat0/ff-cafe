@@ -5,7 +5,8 @@
 #include "stack.h"
 
 typedef struct Dispenser{
-    Stack* item_rack; 
+    void* item_rack; 
+    int   items_in_total;
 } Dispenser;
 
 /**
@@ -27,8 +28,10 @@ void dispenser_add_item(Dispenser* sandwich_dispenser, Sandwich* sandwich);
  * @brief  Remove sandwich from rack
  * 
  * @param  Pointer to Dispenser struct
+ *
+ * @return Void pointer to data
  */
-void dispenser_remove_item(Dispenser* sandwich_dispenser);
+void* dispenser_remove_item(Dispenser* sandwich_dispenser);
 
 /**
  * @brief  Get current count of sandwiches in rack
@@ -46,6 +49,7 @@ int dispenser_get_sandwich_count(Dispenser* sandwich_dispenser);
  * @param  int count of sandwiches
  * @param  float sandwich price
  * @param  int sandwich expiration time in seconds
+ * @param  int sandwich when it was made time in seconds
  * 
  * @return int number of sandwiches added, -1 if bug
 */
@@ -53,7 +57,8 @@ int dispenser_load_sandwiches(
     Dispenser* sandwich_dispenser, 
     int count, 
     float s_price, 
-    int s_expires_in
+    int s_expires_in,
+    int s_made
 );
 
 /** TODO
