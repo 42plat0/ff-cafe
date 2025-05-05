@@ -29,6 +29,8 @@ Atrinkimas sumustiniu ir atidavimas to, kuris galioja
 [fix] update data handling in queue
 [fix] rename methods and variables in stack, sandwich, dispenser files. need smarter naming conv
 [fix] replace checks for null ptr with assert.h
+[fix] update stack/queue with colleague implementations
+    // https://karklas.mif.vu.lt/~daso0866 - stack
 
 ---FEAT
 [feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (new,stack)
