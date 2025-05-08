@@ -7,14 +7,18 @@
 typedef struct Dispenser{
     void* item_rack; 
     int   items_in_total;
+    int   items_expired;
+    int   items_taken;
 } Dispenser;
 
 /**
  * @brief Get pointer to Dispenser struct with Stach initialized
  * 
+ * @param  0 if Stack, 1 - queue
+ * 
  * @return pointer to Dispenser or null if failed
  */
-Dispenser* dispenser_init();
+Dispenser* dispenser_init(int isQueue);
 
 /**
  * @brief  Add sandwich to rack
@@ -43,6 +47,15 @@ void* dispenser_remove_item(Dispenser* sandwich_dispenser);
 int dispenser_get_sandwich_count(Dispenser* sandwich_dispenser);
 
 /**
+ * @brief  Get if sandwich is taken
+ * 
+ * @param  Probability for item to be taken
+ * 
+ * @return True if taken ,false otherwise
+ */
+bool dispenser_is_sandwich_taken(double prob);
+
+/**
  * @brief  Load sandwiches 
  * 
  * @param  Pointer to Dispenser struct
@@ -61,7 +74,7 @@ int dispenser_load_sandwiches(
     int s_made
 );
 
-/** TODO
+/**
  * @brief  Unload sandwiches if there are any that are expired
  * 
  * @param  Pointer to Dispenser struct

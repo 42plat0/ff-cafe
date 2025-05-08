@@ -6,6 +6,7 @@
 #include "include/stack.h"
 #include "include/queue.h"
 #include "include/config.h"
+#include "include/cafe.h"
 #include "include/sandwich.h"
 #include "include/dispenser.h"
 
@@ -31,9 +32,47 @@ int main() {
     int expired_s = 0;
 
     Dispenser* dispenser_1 = dispenser_init(0);
+    Dispenser* dispenser_2 = dispenser_init(0);
+    Dispenser* dispenser_3 = dispenser_init(0);
+    Dispenser* dispenser_4 = dispenser_init(0);
+
+    dispenser_load_sandwiches(
+        dispenser_1, 
+        sandwich_prod_count, 
+        sandwich_price, 
+        sandwich_fresh_len, 
+        0
+    );
+    dispenser_load_sandwiches(
+        dispenser_2, 
+        12, 
+        sandwich_price, 
+        sandwich_fresh_len, 
+        0
+    );
+    dispenser_load_sandwiches(
+        dispenser_3, 
+        11, 
+        sandwich_price, 
+        sandwich_fresh_len, 
+        0
+    );
+    dispenser_load_sandwiches(
+        dispenser_4, 
+        2, 
+        sandwich_price, 
+        sandwich_fresh_len, 
+        0
+    );
+
+    Cafe* array = cafe_init(2);
+
+    array->dispensers[0] = dispenser_1;
+    array->dispensers[1] = dispenser_2;
+
     int time_seconds;
     for (time_seconds = 0; time_seconds < WORKDAY_LENGTH; time_seconds++){
-        if (is_sandwich_taken(sandwich_taken_probability)){
+        if (cafe_is_sandwich_taken(sandwich_taken_probability)){
             Sandwich* taken_sandwich = (Sandwich*) dispenser_remove_item(dispenser_1);
 
             // While there are sandwiches and next one is expired
@@ -53,7 +92,7 @@ int main() {
             }
         }
 
-        if (is_sandwich_load_time(time_seconds, sandwich_prod_time)){
+        if (cafe_is_sandwich_load_time(time_seconds, sandwich_prod_time)){
             dispenser_load_sandwiches(
                 dispenser_1, 
                 sandwich_prod_count, 
@@ -107,25 +146,6 @@ void store_func(){
     Dispenser* dispenser_2 = dispenser_init(0);
 
 
-}
-
-bool is_sandwich_load_time(int curr_time, int sandwich_prod_time){
-    if (curr_time == 0 && sandwich_prod_time){
-        return true;
-    }
-    return curr_time % sandwich_prod_time == 0 && curr_time >= sandwich_prod_time;
-
-}
-// STORE.C
-bool is_sandwich_taken(double p){
-    if (p == 1){
-        return true;
-    }else if(p == 0){
-        return false;
-    }
-
-    double random = (double) rand() / RAND_MAX;
-    return random < p;
 }
 
 void use_dispenser(){

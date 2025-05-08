@@ -2,12 +2,8 @@
 CURRENT:
     # --> [fix] add queue usage to dispenser loading/unloading/adding/size usage
 
-    !#--> [feat] laiko apskaiciavimo ir darbo dienos veikimo funkcija, main 
-    // Susije su sumustinio "senejimu". 
-
-    #--> [feat] add when was sandwich made to its struct, that way we dont need to detract from it each time, update is_expired function then. When picked (sandwich), we check if its expired, if yes its thrown away and calculated loss for cafe, other way - profit. Either way, its removed
-        // Lyg ir done
-
+    !#--> [feat] struct: parduotuve struct 
+        // sumustiniu laikytuvai, sumustinio paemimo principas (old, new), nuostolis, pelnas
 ___________________________________________________________________________
 DONE:
     ++++ [feat] get c stack library
@@ -18,6 +14,10 @@ DONE:
     ++++ [feat] apsirasyti programos struktura (objektai)
     ++++ [feat] update stack lib
     ++++ [feat] struct: laikytuvas struct - naudojasi config vars
+    ++++ [feat] add when was sandwich made to its struct, that way we dont need to detract from it each time, update is_expired function then. When picked (sandwich), we check if its expired, if yes its thrown away and calculated loss for cafe, other way - profit. Either way, its removed
+    ++++ [feat] laiko apskaiciavimo ir darbo dienos veikimo funkcija, main 
+        // Susije su sumustinio "senejimu". 
+    ++++ [feat] proceso funkcija: nuostoliu ir pelno skaiciavimas 
 
 ---------------------------------------------------------------------------
 ---TODO
@@ -31,16 +31,12 @@ Atrinkimas sumustiniu ir atidavimas to, kuris galioja
 [fix] replace checks for null ptr with assert.h
 [fix] update stack/queue with colleague implementations
     // https://karklas.mif.vu.lt/~daso0866 - stack
+[fix] add property setters (+ and -)
 
 ---FEAT
 [feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (new,stack)
 [feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (old,queue)
 [feat] proceso funkcija: sumustinio padejimas (nauji sumustiniai) 
-[feat] proceso funkcija: nuostoliu ir pelno skaiciavimas 
-
-[feat] struct: parduotuve struct 
-    // sumustiniu laikytuvai, sumustinio paemimo principas (old, new), nuostolis, pelnas
-
 [feat] palyginti dvi parduotuves main
 
 ---CHORE 

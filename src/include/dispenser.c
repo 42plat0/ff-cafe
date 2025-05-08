@@ -17,6 +17,8 @@ Dispenser* dispenser_init(int isQueue){
     }
 
     dispenser->items_in_total = 0;
+    dispenser->items_expired = 0;
+    dispenser->items_taken = 0;
 
     if (!dispenser->item_rack){
         perror("Item rack for dispenser couldn't be created");
@@ -56,6 +58,17 @@ int dispenser_get_sandwich_count(Dispenser* sandwich_dispenser){
     }
 
     return stack_size(sandwich_dispenser->item_rack);
+}
+
+bool dispenser_is_sandwich_taken(double prob){
+    if (prob == 1){
+        return true;
+    }else if(prob == 0){
+        return false;
+    }
+
+    double random = (double) rand() / RAND_MAX;
+    return random < prob;
 }
 
 int dispenser_load_sandwiches(Dispenser* sandwich_dispenser, int count, float s_price, int s_expires_in, int s_made){

@@ -3,7 +3,7 @@ CFLAGS = -I.
 NAME=main
 
 DEPS_DIR = include/
-DEPS= stack queue config sandwich dispenser
+DEPS= stack queue config sandwich dispenser cafe
 
 DEPS_H = $(addsufix .h, $(DEPS))
 DEPS_IN_DIR = $(addprefix $(DEPS_DIR), $(DEPS))
