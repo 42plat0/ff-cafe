@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "-g", // Enable debugging symbols
+                "-o",
+                "${workspaceFolder}/src/main",
+                "${workspaceFolder}/src/main.c",
+                "${workspaceFolder}/src/include/*.c" // Include all source files
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}
