@@ -9,6 +9,7 @@ typedef struct Dispenser{
     int   items_in_total;
     int   items_expired;
     int   items_taken;
+    bool  is_queue;
 } Dispenser;
 
 /**
@@ -18,7 +19,7 @@ typedef struct Dispenser{
  * 
  * @return pointer to Dispenser or null if failed
  */
-Dispenser* dispenser_init(int isQueue);
+Dispenser* dispenser_init(bool is_queue);
 
 /**
  * @brief  Add sandwich to rack
@@ -82,5 +83,14 @@ int dispenser_load_sandwiches(
  * @return Returns number of items unloaded
 */
 int dispenser_unload_sandwiches(Dispenser* sandwich_dispenser);
+
+
+/**
+ * @brief  Free up dispenser mem
+ * 
+ * @param  Pointer to Dispenser struct
+ * 
+*/
+void dispenser_destroy(Dispenser* sandwich_dispenser);
 
 #endif

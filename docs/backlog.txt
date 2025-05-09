@@ -1,9 +1,7 @@
 ---------------------------------------------------------------------------
 CURRENT:
-    # --> [fix] add queue usage to dispenser loading/unloading/adding/size usage
-
-    !#--> [feat] struct: parduotuve struct 
-        // sumustiniu laikytuvai, sumustinio paemimo principas (old, new), nuostolis, pelnas
+    !#--> [fix] add queue usage to dispenser loading/unloading/adding/size usage
+    !#--> [feat] add 2nd store with queue and compare with stack
 ___________________________________________________________________________
 DONE:
     ++++ [feat] get c stack library
@@ -18,12 +16,12 @@ DONE:
     ++++ [feat] laiko apskaiciavimo ir darbo dienos veikimo funkcija, main 
         // Susije su sumustinio "senejimu". 
     ++++ [feat] proceso funkcija: nuostoliu ir pelno skaiciavimas 
+    ++++ [feat] struct: parduotuve struct 
+        // sumustiniu laikytuvai, sumustinio paemimo principas (old, new), nuostolis, pelnas
+        // Atrinkti dispenseri, kuris maziau sumustiniu turi
+        // Atrinkimas sumustiniu ir atidavimas to, kuris galioja
 
 ---------------------------------------------------------------------------
----TODO
-Atrinkti dispenseri, kuris maziau sumustiniu turi
-Atrinkimas sumustiniu ir atidavimas to, kuris galioja
-...
 
 ---FIX
 [fix] update data handling in queue
@@ -35,9 +33,10 @@ Atrinkimas sumustiniu ir atidavimas to, kuris galioja
 
 ---FEAT
 [feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (new,stack)
+    // lyg ir done
 [feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (old,queue)
 [feat] proceso funkcija: sumustinio padejimas (nauji sumustiniai) 
-[feat] palyginti dvi parduotuves main
+    // lyg ir done
 
 ---CHORE 
 [chore] create other docs (checking code, etc...)

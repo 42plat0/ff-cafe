@@ -2,7 +2,7 @@
 
 const int SANDWICH_MAX_TOTAL= 9999;
 
-Dispenser* dispenser_init(int isQueue){
+Dispenser* dispenser_init(bool is_queue){
     Dispenser* dispenser = (Dispenser*)malloc(sizeof(Dispenser));
 
     if (!dispenser){
@@ -10,10 +10,12 @@ Dispenser* dispenser_init(int isQueue){
         return NULL;
     }
 
-    if (!isQueue){
+    if (!is_queue){
         dispenser->item_rack = stack_create();
+        dispenser->is_queue = false;
     }else{
         // TODO queue
+        dispenser->is_queue = true;
     }
 
     dispenser->items_in_total = 0;
@@ -48,6 +50,7 @@ void* dispenser_remove_item(Dispenser* sandwich_dispenser){
         return NULL;
     }
 
+    sandwich_dispenser->items_taken++;
     return stack_pop(sandwich_dispenser->item_rack);
 }
 

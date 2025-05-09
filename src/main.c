@@ -16,15 +16,62 @@ const int sandwich_prod_time = SANDWICH_PROD_TIME;
 const int sandwich_prod_count = SANDWICH_PROD_COUNT;
 const float sandwich_price = SANDWICH_PRICE;
 
+void functional_store();
 void use_dispenser();
 void store_func();
 
-// STORE/DISPENSER.C
-bool is_sandwich_taken(double p);
-bool is_sandwich_load_time(int curr_time, int sandwich_prod_time);
-
 // Example usage
 int main() {
+    srand(time(NULL));
+
+    store_func();
+
+    return 0;
+}
+
+// STORE.C
+void store_func(){
+    Dispenser* dispenser_1 = dispenser_init(false);
+    Dispenser* dispenser_2 = dispenser_init(false);
+
+    Cafe* cafe = cafe_init(2, sandwich_prod_time);
+
+    cafe->dispensers[0] = dispenser_1;
+    cafe->dispensers[1] = dispenser_2;
+
+    cafe_initial_dispenser_load(cafe, sandwich_prod_count, sandwich_price, sandwich_fresh_len);
+
+    int time_seconds;
+    for (time_seconds = 0; time_seconds < WORKDAY_LENGTH; time_seconds++){
+        if (dispenser_is_sandwich_taken(sandwich_taken_probability)){
+
+            // // While there are sandwiches and next one is expired
+            // // Take sandwiches and either sell or throwaway
+            cafe_run_sandwiches(cafe, time_seconds);
+
+        }
+
+        if (cafe_is_sandwich_load_time(cafe, time_seconds)){
+            dispenser_load_sandwiches(
+                cafe_get_emptiest_dispenser(cafe), 
+                sandwich_prod_count, 
+                sandwich_price, 
+                sandwich_fresh_len, 
+                time_seconds
+            );
+            cafe->total_sandwich_made += sandwich_prod_count;
+        }
+    }
+    // END OF WORKDAY
+    cafe_display_leftovers(cafe, time_seconds);
+    cafe_show_stats(cafe);
+
+    cafe_destroy(cafe);
+
+    return;
+}
+
+void functional_store(){
     srand(time(NULL));
 
     int total_s_made = 0;
@@ -50,102 +97,86 @@ int main() {
         sandwich_fresh_len, 
         0
     );
-    dispenser_load_sandwiches(
-        dispenser_3, 
-        11, 
-        sandwich_price, 
-        sandwich_fresh_len, 
-        0
-    );
-    dispenser_load_sandwiches(
-        dispenser_4, 
-        2, 
-        sandwich_price, 
-        sandwich_fresh_len, 
-        0
-    );
 
-    Cafe* array = cafe_init(2);
+    Cafe* cafe = cafe_init(2, sandwich_prod_time);
 
-    array->dispensers[0] = dispenser_1;
-    array->dispensers[1] = dispenser_2;
+    cafe->dispensers[0] = dispenser_1;
+    cafe->dispensers[1] = dispenser_2;
+
+    cafe_initial_dispenser_load(cafe, sandwich_prod_count, sandwich_price, sandwich_fresh_len);
 
     int time_seconds;
     for (time_seconds = 0; time_seconds < WORKDAY_LENGTH; time_seconds++){
-        if (cafe_is_sandwich_taken(sandwich_taken_probability)){
-            Sandwich* taken_sandwich = (Sandwich*) dispenser_remove_item(dispenser_1);
+        if (dispenser_is_sandwich_taken(sandwich_taken_probability)){
+            Dispenser* not_empty_disp = cafe_get_non_empty_dispenser(cafe);
+            Sandwich* taken_sandwich = (Sandwich*) dispenser_remove_item(not_empty_disp);
 
-            // While there are sandwiches and next one is expired
-            // Take sandwiches and either sell or throwaway
-            while(dispenser_get_sandwich_count(dispenser_1) > 0 && sandwich_is_expired(taken_sandwich, time_seconds)){
-                expired_s++;
-                printf("\t\r%d total sandwiches\n", dispenser_get_sandwich_count(dispenser_1));
-                printf("taken sandwich is expired, loss: %f\n", taken_sandwich->price);
-                taken_sandwich = (Sandwich*) dispenser_remove_item(dispenser_1);
-            }
-            if (taken_sandwich){
-                sandwiches_taken++;
-                printf("taken sandwich is good, profit: %f\n", taken_sandwich->price);
-            }
-            else{
-                printf("No sandwiches left: %d\n", dispenser_get_sandwich_count(dispenser_1));
-            }
+            // // While there are sandwiches and next one is expired
+            // // Take sandwiches and either sell or throwaway
+            // while(dispenser_get_sandwich_count(dispenser_1) > 0 && sandwich_is_expired(taken_sandwich, time_seconds)){
+            //     expired_s++;
+            //     printf("\t\r%d total sandwiches\n", dispenser_get_sandwich_count(dispenser_1));
+            //     printf("taken sandwich is expired, loss: %f\n", taken_sandwich->price);
+            //     taken_sandwich = (Sandwich*) dispenser_remove_item(dispenser_1);
+            // }
+            // if (taken_sandwich){
+            //     sandwiches_taken++;
+            //     printf("taken sandwich is good, profit: %f\n", taken_sandwich->price);
+            // }
+            // else{
+            //     printf("No sandwiches left: %d\n", dispenser_get_sandwich_count(dispenser_1));
+            // }
+            cafe_run_sandwiches(cafe, time_seconds);
         }
 
-        if (cafe_is_sandwich_load_time(time_seconds, sandwich_prod_time)){
+        if (cafe_is_sandwich_load_time(cafe, time_seconds)){
             dispenser_load_sandwiches(
-                dispenser_1, 
+                cafe_get_emptiest_dispenser(cafe), 
                 sandwich_prod_count, 
                 sandwich_price, 
                 sandwich_fresh_len, 
                 time_seconds
             );
-            printf("Sandiwch count now: %d \n", dispenser_get_sandwich_count(dispenser_1));
-            printf("Sandiwch count now %d\n", dispenser_1->items_in_total);
-            total_s_made += sandwich_prod_count;
+            cafe->total_sandwich_made=+sandwich_prod_count;
         }
     }
     // END OF WORKDAY
-    printf("Sandwiches made: %d\n", total_s_made);
-    printf("Sandwiches taken in %d time is: %d\n", WORKDAY_LENGTH, sandwiches_taken);
-    printf("Sandwiches taken in %d time that were expired is: %d\n", WORKDAY_LENGTH, expired_s);
-    printf("Sandwiches left %d\n", dispenser_get_sandwich_count(dispenser_1));
+    printf("Sandwiches made: %d\n", cafe->total_sandwich_made);
+    // printf("Sandwiches taken in %d time is: %d\n", WORKDAY_LENGTH, sandwiches_taken);
+    // printf("Sandwiches taken in %d time that were expired is: %d\n", WORKDAY_LENGTH, expired_s);
+    // printf("Sandwiches left %d\n", dispenser_get_sandwich_count(dispenser_1));
     
-    if (!dispenser_get_sandwich_count(dispenser_1)){
-        return 0;
-    }
+    // if (!dispenser_get_sandwich_count(dispenser_1)){
+    //     return 0;
+    // }
+
     // Calculates leftovers
-    Sandwich* taken_sandwich = (Sandwich*) dispenser_remove_item(dispenser_1);
 
-    int left_exp = 0;
-    int left_good = 0;
-        if (sandwich_is_expired(taken_sandwich, time_seconds)){
-            left_exp++;
-        }
-        else{
-            left_good++;
-        }
-    // While there are sandwiches, check how many expired and not
-    while(dispenser_get_sandwich_count(dispenser_1) > 0){
-        if (sandwich_is_expired(taken_sandwich, time_seconds)){
-            left_exp++;
-        }
-        else{
-            left_good++;
-        }
-        taken_sandwich = (Sandwich*) dispenser_remove_item(dispenser_1);
-    }
-    printf("Sandwiches left good:  %d\n", left_good);
-    printf("Sandwiches left exp:  %d\n", left_exp);
-    return 0;
-}
+    // Sandwich* taken_sandwich = (Sandwich*) dispenser_remove_item(dispenser_1);
 
-// STORE.C
-void store_func(){
-    Dispenser* dispenser_1 = dispenser_init(0);
-    Dispenser* dispenser_2 = dispenser_init(0);
+    // int left_exp = 0;
+    // int left_good = 0;
+    //     if (sandwich_is_expired(taken_sandwich, time_seconds)){
+    //         left_exp++;
+    //     }
+    //     else{
+    //         left_good++;
+    //     }
+    // // While there are sandwiches, check how many expired and not
+    // while(dispenser_get_sandwich_count(dispenser_1) > 0){
+    //     if (sandwich_is_expired(taken_sandwich, time_seconds)){
+    //         left_exp++;
+    //     }
+    //     else{
+    //         left_good++;
+    //     }
+    //     taken_sandwich = (Sandwich*) dispenser_remove_item(dispenser_1);
+    // }
+    // printf("Sandwiches left good:  %d\n", left_good);
+    // printf("Sandwiches left exp:  %d\n", left_exp);
+    cafe_display_leftovers(cafe, time_seconds);
 
-
+    return;
 }
 
 void use_dispenser(){
