@@ -3,6 +3,7 @@
 
 #include "sandwich.h"
 #include "stack.h"
+#include "queue.h"
 
 typedef struct Dispenser{
     void* item_rack; 

@@ -6,9 +6,9 @@
 #include "include/stack.h"
 #include "include/queue.h"
 #include "include/config.h"
-#include "include/cafe.h"
 #include "include/sandwich.h"
 #include "include/dispenser.h"
+#include "include/cafe.h"
 
 const double sandwich_taken_probability = SANDWICH_EAT_PER_S_PROBABILITY;
 const int sandwich_fresh_len = SANDWICH_FRESH_LENGTH;
@@ -31,15 +31,16 @@ int main() {
 
 // STORE.C
 void store_func(){
-    Dispenser* dispenser_1 = dispenser_init(false);
-    Dispenser* dispenser_2 = dispenser_init(false);
 
-    Cafe* cafe = cafe_init(2, sandwich_prod_time);
+    Cafe* cafe_stack = cafe_init(2, sandwich_prod_time);
+    cafe_stack->dispensers[0] = dispenser_init(false);
+    cafe_stack->dispensers[1] = dispenser_init(false);
+    cafe_initial_dispenser_load(cafe_stack, sandwich_prod_count, sandwich_price, sandwich_fresh_len);
 
-    cafe->dispensers[0] = dispenser_1;
-    cafe->dispensers[1] = dispenser_2;
-
-    cafe_initial_dispenser_load(cafe, sandwich_prod_count, sandwich_price, sandwich_fresh_len);
+    Cafe* cafe_queue = cafe_init(2, sandwich_prod_time);
+    cafe_queue->dispensers[0] = dispenser_init(true);
+    cafe_queue->dispensers[1] = dispenser_init(true);
+    cafe_initial_dispenser_load(cafe_queue, sandwich_prod_count, sandwich_price, sandwich_fresh_len);
 
     int time_seconds;
     for (time_seconds = 0; time_seconds < WORKDAY_LENGTH; time_seconds++){
@@ -47,26 +48,26 @@ void store_func(){
 
             // // While there are sandwiches and next one is expired
             // // Take sandwiches and either sell or throwaway
-            cafe_run_sandwiches(cafe, time_seconds);
+            cafe_run_sandwiches(cafe_stack, time_seconds);
 
         }
 
-        if (cafe_is_sandwich_load_time(cafe, time_seconds)){
+        if (cafe_is_sandwich_load_time(cafe_stack, time_seconds)){
             dispenser_load_sandwiches(
-                cafe_get_emptiest_dispenser(cafe), 
+                cafe_get_emptiest_dispenser(cafe_stack), 
                 sandwich_prod_count, 
                 sandwich_price, 
                 sandwich_fresh_len, 
                 time_seconds
             );
-            cafe->total_sandwich_made += sandwich_prod_count;
+            cafe_stack->total_sandwich_made += sandwich_prod_count;
         }
     }
     // END OF WORKDAY
-    cafe_display_leftovers(cafe, time_seconds);
-    cafe_show_stats(cafe);
+    cafe_display_leftovers(cafe_stack, time_seconds);
+    cafe_show_stats(cafe_stack);
 
-    cafe_destroy(cafe);
+    cafe_destroy(cafe_stack);
 
     return;
 }
