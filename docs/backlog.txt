@@ -1,7 +1,5 @@
 ---------------------------------------------------------------------------
 CURRENT:
-    !#--> [fix] add queue usage to dispenser loading/unloading/adding/size usage
-    !#--> [feat] add 2nd store with queue and compare with stack
 ___________________________________________________________________________
 DONE:
     ++++ [feat] get c stack library
@@ -20,26 +18,28 @@ DONE:
         // sumustiniu laikytuvai, sumustinio paemimo principas (old, new), nuostolis, pelnas
         // Atrinkti dispenseri, kuris maziau sumustiniu turi
         // Atrinkimas sumustiniu ir atidavimas to, kuris galioja
+    ++++ [fix] add queue usage to dispenser loading/unloading/adding/size usage
+    ++++ [feat] add 2nd store with queue and compare with stack
+    ++++ [fix] rename methods and variables in stack, sandwich, dispenser files. need smarter naming conv
+    ++++ [feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (new,stack)
+        // lyg ir done
+    ++++ [feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (old,queue)
+        // lyg ir done
+    ++++ [feat] proceso funkcija: sumustinio padejimas (nauji sumustiniai) 
+        // lyg ir done
+    ++++ [chore] create other docs (checking code, etc...)
 
 ---------------------------------------------------------------------------
 
 ---FIX
 [fix] update data handling in queue
-[fix] rename methods and variables in stack, sandwich, dispenser files. need smarter naming conv
 [fix] replace checks for null ptr with assert.h
-[fix] update stack/queue with colleague implementations
-    // https://karklas.mif.vu.lt/~daso0866 - stack
+    
 [fix] add property setters (+ and -)
 
 ---FEAT
-[feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (new,stack)
-    // lyg ir done
-[feat] proceso funkcija: sumustinio paemimas (vartojimas sumustinio) (old,queue)
-[feat] proceso funkcija: sumustinio padejimas (nauji sumustiniai) 
-    // lyg ir done
 
 ---CHORE 
-[chore] create other docs (checking code, etc...)
 
 ---REFACTOR
 [refactor] store object files in build/ 
