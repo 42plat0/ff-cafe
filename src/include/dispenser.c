@@ -10,12 +10,12 @@ Dispenser* dispenser_init(bool is_queue){
         return NULL;
     }
 
-    if (!is_queue){
-        dispenser->item_rack = stack_create();
-        dispenser->is_queue = false;
-    }else{
+    if (is_queue){
         dispenser->item_rack = queue_init();
         dispenser->is_queue = true;
+    }else{
+        dispenser->item_rack = stack_create();
+        dispenser->is_queue = false;
     }
 
     dispenser->items_in_total = 0;
@@ -42,10 +42,10 @@ void dispenser_add_item(Dispenser* sandwich_dispenser, Sandwich* sandwich){
 
     void* item_rack = sandwich_dispenser->item_rack;
     
-    if (!sandwich_dispenser->is_queue){
-        stack_push(item_rack, sandwich); 
-    }else{
+    if (sandwich_dispenser->is_queue){
         queue_enqueue(item_rack, sandwich);
+    }else{
+        stack_push(item_rack, sandwich); 
     }
 
     sandwich_dispenser->items_in_total++;
@@ -60,10 +60,10 @@ void* dispenser_remove_item(Dispenser* sandwich_dispenser){
     sandwich_dispenser->items_taken++;
     void* item_rack = sandwich_dispenser->item_rack;
 
-    if (!sandwich_dispenser->is_queue){
-        return stack_pop(item_rack);
-    }else{
+    if (sandwich_dispenser->is_queue){
         return queue_dequeue(item_rack);
+    }else{
+        return stack_pop(item_rack);
     }
 }
 
@@ -74,10 +74,10 @@ int dispenser_get_sandwich_count(Dispenser* sandwich_dispenser){
     }
     void* item_rack = sandwich_dispenser->item_rack;
 
-    if (!sandwich_dispenser->is_queue){
-        return stack_size(item_rack);
-    }else{
+    if (sandwich_dispenser->is_queue){
         return queue_size(item_rack);
+    }else{
+        return stack_size(item_rack);
     }
 }
 
@@ -99,7 +99,7 @@ int dispenser_load_sandwiches(Dispenser* sandwich_dispenser, int count, float s_
     }
 
     void* item_rack = sandwich_dispenser->item_rack;
-    int size = !sandwich_dispenser->is_queue ? stack_size(item_rack) : queue_size(item_rack);
+    int size = sandwich_dispenser->is_queue ? queue_size(item_rack) : stack_size(item_rack);
     
     while(
         count-- > 0 && 
@@ -124,10 +124,10 @@ int dispenser_unload_sandwiches(Dispenser* sandwich_dispenser){
     
     int count = dispenser_get_sandwich_count(sandwich_dispenser);
 
-    if (!sandwich_dispenser->is_queue){
-        stack_clear(item_rack, free);
-    }else{
+    if (sandwich_dispenser->is_queue){
         queue_clear(item_rack);
+    }else{
+        stack_clear(item_rack, free);
     }
 
     return count;

@@ -10,7 +10,7 @@ Cafe* cafe_init(int disp_count, int sandwich_prod_time){
 
     cafe->dispenser_count = disp_count;
     cafe->sandwich_prod_time = sandwich_prod_time;
-    cafe->loss = 0, cafe->profit = 0, cafe->total_sandwich_made = 0;
+    cafe->loss = 0, cafe->profit = 0, cafe->total_sandwich_made = 0, cafe->expired = 0;
 
     cafe->dispensers = malloc(cafe->dispenser_count * sizeof(Dispenser *));
 
@@ -49,13 +49,13 @@ Dispenser* cafe_get_non_empty_dispenser(Cafe* cafe){
         return NULL;
     }
 
-    // Check item count for each dispenser in Cafe
-    for(int i = 0; i < cafe->dispenser_count; i++)
-        if (dispenser_get_sandwich_count(cafe->dispensers[i]) > 0)
-            return cafe->dispensers[i]; 
-
-    printf("No dispensers have sandwiches, returning null\n");
-    return NULL;
+    int random = rand() % cafe->dispenser_count;
+    Dispenser* disp = cafe->dispensers[random];
+    while (disp == NULL){
+        disp = cafe->dispensers[rand() % cafe->dispenser_count];
+    }
+    
+    return disp; 
 }
 
 bool cafe_is_sandwich_load_time(Cafe* cafe, int curr_time){
@@ -75,12 +75,12 @@ void cafe_initial_dispenser_load(Cafe* cafe, int prod_count, float price, int fr
     for(int i = 0; i < cafe->dispenser_count; i++){
         dispenser_load_sandwiches(
             cafe->dispensers[i],
-            prod_count,
+            prod_count / cafe->dispenser_count,
             price,
             fresh_len,
             0
         );
-        cafe->total_sandwich_made += prod_count;
+        cafe->total_sandwich_made += prod_count / cafe->dispenser_count;
     }
 }
 
@@ -91,35 +91,28 @@ void cafe_run_sandwiches(Cafe* cafe, int current_time){
     }
 
     Dispenser* disp = cafe_get_non_empty_dispenser(cafe);
-    Sandwich* taken_sandwich = (Sandwich*) dispenser_remove_item(disp);
-
-    bool has_disp_items = dispenser_get_sandwich_count(disp) > 0;
-    bool is_sandwich_exp = sandwich_is_expired(taken_sandwich, current_time);
-
-    // While there are sandwiches and next one is expired
-    // Take sandwiches and either sell or throwaway
-    while(has_disp_items && is_sandwich_exp)
-    {
-        disp->items_expired++;
-        cafe_increase_loss(cafe, taken_sandwich->price);
-
-        printf("\t\r%d Total sandwiches\n", dispenser_get_sandwich_count(disp));
-        printf("Taken sandwich was expired, incurred loss of: $%.2f\n", taken_sandwich->price);
-
-        taken_sandwich = (Sandwich*) dispenser_remove_item(disp);
-        
-        has_disp_items = dispenser_get_sandwich_count(disp) > 0;
-        is_sandwich_exp = sandwich_is_expired(taken_sandwich, current_time);
+    if (!disp) {
+        printf("No sandwiches available.\n");
+        return;
     }
 
-    if (taken_sandwich){
-        disp->items_taken++;
+    Sandwich* taken_sandwich = (Sandwich*) dispenser_remove_item(disp);
+
+    if (taken_sandwich == NULL){
+        return;
+    }
+    if (sandwich_is_expired(taken_sandwich, current_time)){
+        cafe->expired++;
+        disp->items_expired++;
+        printf("Taken sandwich was expired, incurred loss of: $%.2f\n", taken_sandwich->price);
+
+        cafe_increase_loss(cafe, taken_sandwich->price);
+    }
+    else{
         cafe_increase_profit(cafe, taken_sandwich->price);
         printf("Taken sandwich is good, profit: %.2f\n", taken_sandwich->price);
     }
-    else{
-        printf("No sandwiches left that weren't expired.\n");
-    }
+    disp->items_taken++;
 }
 
 void cafe_increase_profit(Cafe* cafe, float price){
@@ -167,7 +160,7 @@ int* cafe_get_leftovers(Cafe* cafe, int end_time){
                 leftovers[1]++;
             }
 
-            cafe->loss += taken_sandwich->price;
+            cafe_increase_loss(cafe, taken_sandwich->price);
             has_items = dispenser_get_sandwich_count(curr_disp);
         }
     }
@@ -183,7 +176,7 @@ void cafe_display_leftovers(Cafe* cafe, int end_time){
 
     int* leftover_arr = cafe_get_leftovers(cafe, end_time);
 
-    // TODO - what todo?
+    printf("Sandwiches left: %d\n", leftover_arr[0] + leftover_arr[1]);
     printf("Sandwiches left exp: %d\n", leftover_arr[0]);
     printf("Sandwiches left good: %d\n", leftover_arr[1]);
 
@@ -199,6 +192,7 @@ void cafe_show_stats(Cafe* cafe){
     printf("Total profit: $%.2f\n", cafe->profit);
     printf("Total loss: $%.2f\n", cafe->loss);
     printf("Sandwiches made: %d\n", cafe->total_sandwich_made);
+    printf("Sandwiches expired: %d\n", cafe->expired);
 
 }
 

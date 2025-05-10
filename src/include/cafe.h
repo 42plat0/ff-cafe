@@ -12,6 +12,7 @@ typedef struct Cafe{
     float loss;
     float profit;
     int total_sandwich_made;
+    int expired;
 }Cafe;
 
 // Builds you a cafe for free
