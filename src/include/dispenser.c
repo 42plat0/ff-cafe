@@ -1,16 +1,26 @@
 #include "dispenser.h"
 
-const int SANDWICH_MAX_TOTAL=100;
+const int SANDWICH_MAX_TOTAL= 9999;
 
-Dispenser* dispenser_init(){
+Dispenser* dispenser_init(bool is_queue){
     Dispenser* dispenser = (Dispenser*)malloc(sizeof(Dispenser));
 
-    if (!dispenser){
+    if (dispenser == NULL){
         perror("Dispenser couldn't be created");
         return NULL;
     }
 
-    dispenser->item_rack = stack_create();
+    if (!is_queue){
+        dispenser->item_rack = stack_create();
+        dispenser->is_queue = false;
+    }else{
+        dispenser->item_rack = queue_init();
+        dispenser->is_queue = true;
+    }
+
+    dispenser->items_in_total = 0;
+    dispenser->items_expired = 0;
+    dispenser->items_taken = 0;
 
     if (!dispenser->item_rack){
         perror("Item rack for dispenser couldn't be created");
@@ -29,20 +39,32 @@ void dispenser_add_item(Dispenser* sandwich_dispenser, Sandwich* sandwich){
         perror("Dispenser/sandwich/stack is null, cant add item");
         return;
     }
-    
-    stack_push(sandwich_dispenser->item_rack, sandwich); 
-}
 
-void dispenser_remove_item(Dispenser* sandwich_dispenser){
-    if (sandwich_dispenser == NULL){
-        perror("Dispenser is null, cant remove item");
-        return;
+    void* item_rack = sandwich_dispenser->item_rack;
+    
+    if (!sandwich_dispenser->is_queue){
+        stack_push(item_rack, sandwich); 
+    }else{
+        queue_enqueue(item_rack, sandwich);
     }
 
-    // TODO perkelti i atskira f()
-    Sandwich* item = (Sandwich *) stack_pop(sandwich_dispenser->item_rack);
-    // Do smth
-    sandwich_destroy(item);
+    sandwich_dispenser->items_in_total++;
+}
+
+void* dispenser_remove_item(Dispenser* sandwich_dispenser){
+    if (sandwich_dispenser == NULL){
+        perror("Dispenser is null, cant remove item");
+        return NULL;
+    }
+
+    sandwich_dispenser->items_taken++;
+    void* item_rack = sandwich_dispenser->item_rack;
+
+    if (!sandwich_dispenser->is_queue){
+        return stack_pop(item_rack);
+    }else{
+        return queue_dequeue(item_rack);
+    }
 }
 
 int dispenser_get_sandwich_count(Dispenser* sandwich_dispenser){
@@ -50,23 +72,42 @@ int dispenser_get_sandwich_count(Dispenser* sandwich_dispenser){
         perror("Dispenser or rack is null");
         return -1;
     }
+    void* item_rack = sandwich_dispenser->item_rack;
 
-    return stack_size(sandwich_dispenser->item_rack);
+    if (!sandwich_dispenser->is_queue){
+        return stack_size(item_rack);
+    }else{
+        return queue_size(item_rack);
+    }
 }
 
-int dispenser_load_sandwiches(Dispenser* sandwich_dispenser, int count, float s_price, int s_expires_in){
+bool dispenser_is_sandwich_taken(double prob){
+    if (prob == 1){
+        return true;
+    }else if(prob == 0){
+        return false;
+    }
+
+    double random = (double) rand() / RAND_MAX;
+    return random < prob;
+}
+
+int dispenser_load_sandwiches(Dispenser* sandwich_dispenser, int count, float s_price, int s_expires_in, int s_made){
     if (sandwich_dispenser == NULL  || sandwich_dispenser->item_rack == NULL){
         perror("Dispenser/stack is null");
         return -1;
     }
+
+    void* item_rack = sandwich_dispenser->item_rack;
+    int size = !sandwich_dispenser->is_queue ? stack_size(item_rack) : queue_size(item_rack);
     
     while(
         count-- > 0 && 
-        stack_size(sandwich_dispenser->item_rack) < SANDWICH_MAX_TOTAL // Manually limit stack size
+        size < SANDWICH_MAX_TOTAL // Manually limit size
     ){
         dispenser_add_item(
             sandwich_dispenser, 
-            sandwich_init(s_price, s_expires_in)
+            sandwich_init(s_price, s_expires_in, s_made)
         );
     }
 
@@ -79,9 +120,15 @@ int dispenser_unload_sandwiches(Dispenser* sandwich_dispenser){
         perror("Dispenser/stack is null");
         return -1;
     }
-    int count = stack_size(sandwich_dispenser->item_rack);
+    void* item_rack = sandwich_dispenser->item_rack;
     
-    stack_clear(sandwich_dispenser->item_rack, free);
+    int count = dispenser_get_sandwich_count(sandwich_dispenser);
+
+    if (!sandwich_dispenser->is_queue){
+        stack_clear(item_rack, free);
+    }else{
+        queue_clear(item_rack);
+    }
 
     return count;
 }
